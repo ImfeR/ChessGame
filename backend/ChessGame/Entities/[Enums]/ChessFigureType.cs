@@ -1,6 +1,11 @@
 namespace Entities._Enums_;
 
-public class ChessFigureType
+public enum ChessFigureType
 {
-    
+    King,
+    Queen,
+    Rook,
+    Bishop,
+    Knight,
+    Pawn
 }
