@@ -1,5 +1,7 @@
 namespace Infrastructure.Strategies;
 
+using _Enums_;
+
 using Entities;
 using Entities._Enums_;
 
@@ -7,38 +9,39 @@ using Validators;
 
 public class KnightStrategy : IFigureStrategy
 {
-    #region Fields
-    
-    private readonly Color _figureColor;
+	#region Fields
 
-    #endregion
+	private readonly Color _figureColor;
 
-    #region Constructors
+	#endregion
 
-    public KnightStrategy(Color color)
-    {
-        _figureColor = color;
-    }
+	#region Constructors
 
-    #endregion
+	public KnightStrategy(Color color)
+	{
+		_figureColor = color;
+	}
 
-    #region Methods
+	#endregion
 
-    public bool CanMoveOnPosition(int[] currentPosition, int[] newPosition, ChessBoard board)
-    {
-        return GetPossibleMoves(currentPosition).Contains(newPosition) 
-               && (board.Board[newPosition[0]][newPosition[1]] != null 
-                   || board.Board[newPosition[0]][newPosition[1]]!.Color != _figureColor);
-    }
-    
-    public List<int[]> GetPossibleMoves(int[] currentPosition)
-    {
-        var possibleMoves = new List<int[]>();
-        
-        
-        
-        return PossibleMovesFilter.FilterPossibleMovesFieldLimited(possibleMoves);
-    }
+	#region Methods
 
-    #endregion
+	public MovementType GetMovementTypeOnPosition(int[] currentPosition, int[] newPosition, ChessBoard board)
+	{
+		if (!GetPossibleMoves(currentPosition).Contains(newPosition)
+		    || board.Board?[newPosition[0]][newPosition[1]]!.Color == _figureColor)
+			return MovementType.None;
+
+		return board.Board?[newPosition[0]][newPosition[1]] == null ? MovementType.Move : MovementType.Cut;
+	}
+
+	public List<int[]> GetPossibleMoves(int[] currentPosition)
+	{
+		var possibleMoves = new List<int[]>();
+
+
+		return PossibleMovesFilter.FilterPossibleMovesFieldLimited(possibleMoves);
+	}
+
+	#endregion
 }

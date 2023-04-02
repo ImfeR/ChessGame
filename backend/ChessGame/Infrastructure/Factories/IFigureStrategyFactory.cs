@@ -1,9 +1,10 @@
 namespace Infrastructure.Factories;
 
-using Strategies;
 using Entities;
+
+using Strategies;
 
 public interface IFigureStrategyFactory
 {
-    public IFigureStrategy GetFigureStrategy(ChessFigure figure);
+	public IFigureStrategy GetFigureStrategy(ChessFigure figure);
 }

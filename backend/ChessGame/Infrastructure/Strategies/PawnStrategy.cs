@@ -1,79 +1,85 @@
 namespace Infrastructure.Strategies;
 
-using Validators;
+using _Enums_;
 
 using Entities;
 using Entities._Enums_;
 
+using Validators;
+
 /// <summary>
-/// Стратегия для пешки
+///     Стратегия для пешки.
 /// </summary>
 public class PawnStrategy : IFigureStrategy
 {
-    #region Constants
-    
-    private const int WhiteStartRow = 1;
-    private const int BlackStartRow = 6;
+	#region Fields
 
-    #endregion
+	private Color _figureColor;
 
-    #region Fields
-    
-    private Color _figureColor;
+	#endregion
 
-    #endregion
+	#region Constructors
 
-    #region Constructors
+	public PawnStrategy(Color figureColor)
+	{
+		_figureColor = figureColor;
+	}
 
-    public PawnStrategy(Color figureColor)
-    {
-        _figureColor = figureColor;
-    }
+	#endregion
 
-    #endregion
+	#region Constants
 
-    #region Methods
-    
-    public bool CanMoveOnPosition(int[] currentPosition, int[] newPosition, ChessBoard board)
-    {
-        return GetPossibleMoves(currentPosition).Contains(newPosition)
-               && (board.Board[newPosition[0]][newPosition[1]] == null
-                   || board.Board[newPosition[0]][newPosition[1]]!.Color != _figureColor);
-    }
+	private const int WhiteStartRow = 1;
+	private const int BlackStartRow = 6;
 
-    public List<int[]> GetPossibleMoves(int[] currentPosition)
-    {
-        var possibleMoves = new List<int[]> ();
+	#endregion
 
-        switch (_figureColor)
-        {
-            case Color.Black:
-            {
-                if (currentPosition[0] == BlackStartRow)
-                    possibleMoves.Add(new[] { currentPosition[0] - 2, currentPosition[1] });
-                
-                possibleMoves.Add(new [] { currentPosition[0] - 1, currentPosition[1] });
-                possibleMoves.Add(new [] { currentPosition[0] - 1, currentPosition[1] - 1 });
-                possibleMoves.Add(new [] { currentPosition[0] - 1, currentPosition[1] + 1 });
+	#region Methods
 
-                break;
-            }
-            case Color.White:
-            {
-                if (currentPosition[0] == WhiteStartRow)
-                    possibleMoves.Add(new [] { currentPosition[0] + 2, currentPosition[1] });
+	public MovementType GetMovementTypeOnPosition(int[] currentPosition, int[] newPosition, ChessBoard board)
+	{
+		if (!GetPossibleMoves(currentPosition).Contains(newPosition)
+		    || board.Board?[newPosition[0]][newPosition[1]]!.Color == _figureColor
+		    || board.Board?[newPosition[0]][newPosition[1]] == null && newPosition[1] != currentPosition[1])
+			return MovementType.None;
 
-                possibleMoves.Add(new [] { currentPosition[0] + 1, currentPosition[1] });
-                possibleMoves.Add(new [] { currentPosition[0] + 1, currentPosition[1] - 1 });
-                possibleMoves.Add(new [] { currentPosition[0] + 1, currentPosition[1] + 1 });
-                break;
-            }
-            default:
-                throw new ArgumentOutOfRangeException(nameof(_figureColor), _figureColor, null);
-        }       
-        
-        return PossibleMovesFilter.FilterPossibleMovesFieldLimited(possibleMoves);
-    }
 
-    #endregion
+		return MovementType.Cut;
+	}
+
+	public List<int[]> GetPossibleMoves(int[] currentPosition)
+	{
+		var possibleMoves = new List<int[]>();
+
+		switch (_figureColor)
+		{
+			case Color.Black:
+			{
+				if (currentPosition[0] == BlackStartRow)
+					possibleMoves.Add(new[] { currentPosition[0] - 2, currentPosition[1] });
+
+				possibleMoves.Add(new[] { currentPosition[0] - 1, currentPosition[1] });
+				possibleMoves.Add(new[] { currentPosition[0] - 1, currentPosition[1] - 1 });
+				possibleMoves.Add(new[] { currentPosition[0] - 1, currentPosition[1] + 1 });
+
+				break;
+			}
+			case Color.White:
+			{
+				if (currentPosition[0] == WhiteStartRow)
+					possibleMoves.Add(new[] { currentPosition[0] + 2, currentPosition[1] });
+
+				possibleMoves.Add(new[] { currentPosition[0] + 1, currentPosition[1] });
+				possibleMoves.Add(new[] { currentPosition[0] + 1, currentPosition[1] - 1 });
+				possibleMoves.Add(new[] { currentPosition[0] + 1, currentPosition[1] + 1 });
+				break;
+			}
+			default:
+				throw new ArgumentOutOfRangeException(nameof(_figureColor), _figureColor, null);
+		}
+
+		return PossibleMovesFilter.FilterPossibleMovesFieldLimited(possibleMoves);
+	}
+
+	#endregion
 }
