@@ -24,6 +24,13 @@ public class KnightStrategy : IFigureStrategy
 
 	#endregion
 
+	#region Constants
+
+	private const int TreeStepMove = 3;
+	private const int OneStepMove = 1;
+
+	#endregion
+
 	#region Methods
 
 	public MovementType GetMovementTypeOnPosition(int[] currentPosition, int[] newPosition, ChessBoard board)
@@ -37,7 +44,20 @@ public class KnightStrategy : IFigureStrategy
 
 	public List<int[]> GetPossibleMoves(int[] currentPosition)
 	{
-		var possibleMoves = new List<int[]>();
+		var possibleMoves = new List<int[]>
+		{
+			new[] { currentPosition[0] + TreeStepMove, currentPosition[1] + OneStepMove },
+			new[] { currentPosition[0] + OneStepMove, currentPosition[1] + TreeStepMove },
+
+			new[] { currentPosition[0] - TreeStepMove, currentPosition[1] - OneStepMove },
+			new[] { currentPosition[0] - OneStepMove, currentPosition[1] - TreeStepMove },
+
+			new[] { currentPosition[0] + TreeStepMove, currentPosition[1] - OneStepMove },
+			new[] { currentPosition[0] + OneStepMove, currentPosition[1] - TreeStepMove },
+
+			new[] { currentPosition[0] - TreeStepMove, currentPosition[1] + OneStepMove },
+			new[] { currentPosition[0] - OneStepMove, currentPosition[1] + TreeStepMove },
+		};
 
 
 		return PossibleMovesFilter.FilterPossibleMovesFieldLimited(possibleMoves);
