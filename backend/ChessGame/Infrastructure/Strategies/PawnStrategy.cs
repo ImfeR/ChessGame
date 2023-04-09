@@ -44,7 +44,7 @@ public class PawnStrategy : IFigureStrategy
 			return MovementType.None;
 
 
-		return MovementType.Cut;
+		return board.Board?[newPosition[0]][newPosition[1]] == null ? MovementType.Move : MovementType.Cut;
 	}
 
 	public List<int[]> GetPossibleMoves(int[] currentPosition)
